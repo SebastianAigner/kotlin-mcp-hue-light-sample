@@ -45,27 +45,21 @@ class HueClientImpl : HueClient {
             }
         }.bodyAsText()
 
-        println("[DEBUG_LOG] Rooms response: $rooms")
 
         val roomsJson = Json.parseToJsonElement(rooms).jsonObject
         val roomData = roomsJson["data"]?.jsonArray ?: return emptyList()
 
-        println("[DEBUG_LOG] Available rooms: ${roomData.mapNotNull { 
-            it.jsonObject["metadata"]?.jsonObject?.get("name")?.jsonPrimitive?.content 
-        }}")
 
         val targetRoom = roomData.find { 
             it.jsonObject["metadata"]?.jsonObject?.get("name")?.jsonPrimitive?.content == roomName 
         }
 
         if (targetRoom == null) {
-            println("[DEBUG_LOG] Room '$roomName' not found")
             return emptyList()
         }
 
         // Get all lights in the room
         val roomId = targetRoom.jsonObject["id"]?.jsonPrimitive?.content ?: return emptyList()
-        println("[DEBUG_LOG] Found room ID: $roomId")
 
         val lights = client.get("$bridgeUrl/clip/v2/resource/light") {
             headers {
@@ -73,7 +67,6 @@ class HueClientImpl : HueClient {
             }
         }.bodyAsText()
 
-        println("[DEBUG_LOG] Lights response: $lights")
 
         val lightsJson = Json.parseToJsonElement(lights).jsonObject
         val lightData = lightsJson["data"]?.jsonArray ?: return emptyList()
@@ -84,7 +77,6 @@ class HueClientImpl : HueClient {
             ?.mapNotNull { it.jsonObject["rid"]?.jsonPrimitive?.content }
             ?: emptyList()
 
-        println("[DEBUG_LOG] Device IDs in room: $deviceIds")
 
         val result = lightData.mapNotNull { light ->
             val owner = light.jsonObject["owner"]?.jsonObject?.get("rid")?.jsonPrimitive?.content
@@ -93,7 +85,6 @@ class HueClientImpl : HueClient {
             } else null
         }
 
-        println("[DEBUG_LOG] Found ${result.size} lights for room '$roomName' with ID $roomId")
         return result
     }
 
