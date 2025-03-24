@@ -9,3 +9,7 @@ Junie, the coding agent by JetBrains: https://www.jetbrains.com/junie/
 MCP Server Plugin for JetBrains IDEs: https://plugins.jetbrains.com/plugin/26071-mcp-server
 
 MCP inspector: https://github.com/modelcontextprotocol/inspector
+
+## How to run
+
+Run the `installDist` Gradle task, and point your MCP client to the generated startup script in `build/install/huelight-mcp/bin`.
