@@ -15,11 +15,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
 import kotlinx.io.asSource
 import kotlinx.io.buffered
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
 
 fun main() {
     val server: Server = createServer()
@@ -29,7 +31,7 @@ fun main() {
     )
     runBlocking {
         val job = Job()
-        server.onCloseCallback = { job.complete() }
+        server.onClose { job.complete() }
         server.connect(stdioServerTransport)
         job.join()
     }
@@ -58,18 +60,18 @@ fun createServer(): Server {
             )
         )
     }
-    
+
     val setLightStateInputSchema = Tool.Input(
         buildJsonObject {
-            put("lightId", "string")
-            put("on", "boolean")
-            put("brightness", "number")
-            put("colorGamutX", "number")
-            put("colorGamutY", "number")
-            put("dimming", "number")
+            putJsonObject("lightId") { put("type", JsonPrimitive("string")) }
+            putJsonObject("on") { put("type", JsonPrimitive("boolean")) }
+            putJsonObject("brightness") { put("type", JsonPrimitive("number")) }
+            putJsonObject("colorGamutX") { put("type", JsonPrimitive("number")) }
+            putJsonObject("colorGamutY") { put("type", JsonPrimitive("number")) }
+            putJsonObject("dimming") { put("type", JsonPrimitive("number")) }
         }
     )
-    
+
     server.addTool(
         "set-light-state",
         "Sets the light state for a given light. Brightness goes from 0 to 100.",

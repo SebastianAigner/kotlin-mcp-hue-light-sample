@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.1.10"
-    kotlin("plugin.serialization") version "2.1.10"
+    kotlin("jvm") version "2.2.0"
+    kotlin("plugin.serialization") version "2.2.0"
     application
 }
 
@@ -11,14 +11,14 @@ application {
 group = "io.sebi"
 version = "1.0-SNAPSHOT"
 
-val ktorVersion = "3.1.1"
+val ktorVersion = "3.2.3"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("io.modelcontextprotocol:kotlin-sdk:0.3.0")
+    implementation("io.modelcontextprotocol:kotlin-sdk:0.6.0")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
